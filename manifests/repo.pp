@@ -29,10 +29,19 @@ class mongodb::repo (
     }
 
     'Debian': {
-      $location = $::operatingsystem ? {
-        'Debian' => 'http://downloads-distro.mongodb.org/repo/debian-sysvinit',
-        'Ubuntu' => 'http://downloads-distro.mongodb.org/repo/ubuntu-upstart',
-        default  => undef
+      if (versioncmp($version, '3.0.0') >= 0) {
+        $location = $::operatingsystem ? {
+          'Debian' => 'http://downloads-distro.mongodb.org/repo/debian-sysvinit',
+          'Ubuntu' => 'http://repo.mongodb.org/apt/ubuntu',
+          default  => undef
+        }
+      }
+      else {
+        $location = $::operatingsystem ? {
+          'Debian' => 'http://downloads-distro.mongodb.org/repo/debian-sysvinit',
+          'Ubuntu' => 'http://downloads-distro.mongodb.org/repo/ubuntu-upstart',
+          default  => undef
+        }
       }
       class { '::mongodb::repo::apt': }
     }
